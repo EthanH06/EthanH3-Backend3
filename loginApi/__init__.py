@@ -1,16 +1,29 @@
+
+
+"""
+These imports define the key objects
+"""
+
 from flask import Flask
-from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
+import logging
+
+"""
+These object and definitions are used throughout the Jupyter Notebook.
+"""
+
+# Setup of key Flask object (app)
 app = Flask(__name__)
-dbURI = "sqlite:///sqlite.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = dbURI
-app.config["SECRET_KEY"] = "SECRET_KEY"
-db = SQLAlchemy(app)
-Migrate(app, db)
+# Setup SQLAlchemy object and properties for the database (db)
+database = 'sqlite:///sqlite.db'  # path and filename of database
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = database
+app.config['SECRET_KEY'] = 'SECRET_KEY'
+app.logger.setLevel(logging.INFO)
+app.logger.addHandler(logging.StreamHandler())  # Logs to console
+db = SQLAlchemy()
 
-app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
-app.config["UPLOAD_EXTENSIONS"] = [".jpg", ".png", ".gif"]
-app.config["UPLOAD_FOLDER"] = "volumes/uploads/"
+
+# This belongs in place where it runs once per project
+db.init_app(app)
